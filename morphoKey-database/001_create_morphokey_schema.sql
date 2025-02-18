@@ -1,6 +1,22 @@
 -- Crear esquema para la base de datos Taxokey
 CREATE SCHEMA taxokey;
 
+-- Tabla Country (debe ir antes de cualquier tabla que la referencie)
+CREATE TABLE taxokey.Country (
+    countryID UUID PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    code VARCHAR(10),
+    description TEXT
+);
+
+-- Tabla City (requiere Country)
+CREATE TABLE taxokey.City (
+    cityID UUID PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    countryID UUID NOT NULL REFERENCES taxokey.Country(countryID),
+    description TEXT
+);
+
 -- Tabla Domain
 CREATE TABLE taxokey.Domain (
     domainID UUID PRIMARY KEY,
@@ -13,7 +29,7 @@ CREATE TABLE taxokey.Domain (
     photo_url TEXT
 );
 
--- Tabla Kingdom
+-- Tabla Kingdom (requiere Domain)
 CREATE TABLE taxokey.Kingdom (
     kingdomID UUID PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -26,7 +42,7 @@ CREATE TABLE taxokey.Kingdom (
     domainID UUID NOT NULL REFERENCES taxokey.Domain(domainID)
 );
 
--- Tabla Phylum
+-- Tabla Phylum (requiere Kingdom)
 CREATE TABLE taxokey.Phylum (
     phylumID UUID PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -39,7 +55,7 @@ CREATE TABLE taxokey.Phylum (
     kingdomID UUID NOT NULL REFERENCES taxokey.Kingdom(kingdomID)
 );
 
--- Tabla Class
+-- Tabla Class (requiere Phylum)
 CREATE TABLE taxokey.Class (
     classID UUID PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -52,7 +68,7 @@ CREATE TABLE taxokey.Class (
     phylumID UUID NOT NULL REFERENCES taxokey.Phylum(phylumID)
 );
 
--- Tabla Order
+-- Tabla Order (requiere Class)
 CREATE TABLE taxokey.Order (
     orderID UUID PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -65,7 +81,7 @@ CREATE TABLE taxokey.Order (
     classID UUID NOT NULL REFERENCES taxokey.Class(classID)
 );
 
--- Tabla Family
+-- Tabla Family (requiere Order)
 CREATE TABLE taxokey.Family (
     familyID UUID PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -78,7 +94,7 @@ CREATE TABLE taxokey.Family (
     orderID UUID NOT NULL REFERENCES taxokey.Order(orderID)
 );
 
--- Tabla Genus
+-- Tabla Genus (requiere Family)
 CREATE TABLE taxokey.Genus (
     genusID UUID PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -91,7 +107,7 @@ CREATE TABLE taxokey.Genus (
     familyID UUID NOT NULL REFERENCES taxokey.Family(familyID)
 );
 
--- Tabla Species
+-- Tabla Species (requiere Genus y Country)
 CREATE TABLE taxokey.Species (
     speciesID UUID PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -105,23 +121,7 @@ CREATE TABLE taxokey.Species (
     countryID UUID NOT NULL REFERENCES taxokey.Country(countryID)
 );
 
--- Tabla Country
-CREATE TABLE taxokey.Country (
-    countryID UUID PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    code VARCHAR(10),
-    description TEXT
-);
-
--- Tabla City
-CREATE TABLE taxokey.City (
-    cityID UUID PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    countryID UUID NOT NULL REFERENCES taxokey.Country(countryID),
-    description TEXT
-);
-
--- Tabla User
+-- Tabla User (requiere Country)
 CREATE TABLE taxokey.User (
     userID UUID PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -138,7 +138,7 @@ CREATE TABLE taxokey.User (
     countryID UUID REFERENCES taxokey.Country(countryID)
 );
 
--- Tabla Password
+-- Tabla Password (requiere User)
 CREATE TABLE taxokey.Password (
     passwordID UUID PRIMARY KEY,
     userID UUID NOT NULL REFERENCES taxokey.User(userID),
@@ -146,13 +146,13 @@ CREATE TABLE taxokey.Password (
     last_updated TIMESTAMP NOT NULL
 );
 
--- Tabla Publication_Type (Nueva tabla para normalización)
+-- Tabla Publication_Type
 CREATE TABLE taxokey.Publication_Type (
     publicationTypeID UUID PRIMARY KEY,
     type_name VARCHAR(50) NOT NULL
 );
 
--- Tabla Publication
+-- Tabla Publication (requiere User, City y Publication_Type)
 CREATE TABLE taxokey.Publication (
     publicationID UUID PRIMARY KEY,
     title VARCHAR(100),
@@ -166,7 +166,7 @@ CREATE TABLE taxokey.Publication (
     cityID UUID NOT NULL REFERENCES taxokey.City(cityID)
 );
 
--- Tabla Comment
+-- Tabla Comment (requiere Publication y User)
 CREATE TABLE taxokey.Comment (
     commentID UUID PRIMARY KEY,
     publicationID UUID NOT NULL REFERENCES taxokey.Publication(publicationID),
@@ -177,7 +177,7 @@ CREATE TABLE taxokey.Comment (
     parentCommentID UUID REFERENCES taxokey.Comment(commentID)
 );
 
--- Tabla Publication_Reference
+-- Tabla Publication_Reference (requiere Publication)
 CREATE TABLE taxokey.Publication_Reference (
     referenceID UUID PRIMARY KEY,
     publicationID UUID NOT NULL REFERENCES taxokey.Publication(publicationID),
@@ -186,7 +186,7 @@ CREATE TABLE taxokey.Publication_Reference (
     description TEXT
 );
 
--- Tabla Publication_Photo
+-- Tabla Publication_Photo (requiere Publication)
 CREATE TABLE taxokey.Publication_Photo (
     photoID UUID PRIMARY KEY,
     publicationID UUID NOT NULL REFERENCES taxokey.Publication(publicationID),
@@ -204,7 +204,7 @@ CREATE TABLE taxokey.Taxonomic_Question (
     difficulty_level VARCHAR(20)
 );
 
--- Tabla Taxonomic_Option
+-- Tabla Taxonomic_Option (requiere Taxonomic_Question y Species)
 CREATE TABLE taxokey.Taxonomic_Option (
     optionID UUID PRIMARY KEY,
     questionID UUID NOT NULL REFERENCES taxokey.Taxonomic_Question(questionID),
@@ -220,7 +220,7 @@ CREATE TABLE taxokey.Characteristic_Type (
     description TEXT
 );
 
--- Tabla Characteristic
+-- Tabla Characteristic (requiere Characteristic_Type)
 CREATE TABLE taxokey.Characteristic (
     characteristicID UUID PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -230,7 +230,7 @@ CREATE TABLE taxokey.Characteristic (
     updated_date DATE
 );
 
--- Tabla Species_Characteristic
+-- Tabla Species_Characteristic (requiere Species y Characteristic)
 CREATE TABLE taxokey.Species_Characteristic (
     speciesCharacteristicID UUID PRIMARY KEY,
     speciesID UUID NOT NULL REFERENCES taxokey.Species(speciesID),
@@ -238,4 +238,3 @@ CREATE TABLE taxokey.Species_Characteristic (
     observation TEXT,
     association_date DATE NOT NULL
 );
-
