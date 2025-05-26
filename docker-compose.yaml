@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  postgres:
+  postgres: #base de datos
     image: postgres:16
     container_name: morpho_key_db
     restart: always
@@ -15,5 +15,20 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  pgadmin:  #pg admin como interfaz grafica
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
 volumes:
   postgres_data:
+  pgadmin_data:
