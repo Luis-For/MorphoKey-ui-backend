@@ -35,3 +35,12 @@ Descarga Docker Desktop desde:[https://www.docker.com/products/docker-desktop](h
 - **Linux (Debian/Ubuntu):**
 Instrucciones oficiales: [https://docs.docker.com/engine/install/ubuntu/](https://docs.docker.com/engine/install/ubuntu/)
 
+## Ejecutar el Proyecto
+1. Acceder al directorio donde esta el proyecto y el docker-compose y ejecutar el comando:
+```bash 
+    cd MorphoKey-ui-backend 
+    docker-compose up -d
+```
+usando la url [localhost://8080](localhost://8080)
+![Login](docs/images/captura_pgadmin_home_localhost.png)
+![Home](docs/images/captura_pgadmin_localhost.png)
