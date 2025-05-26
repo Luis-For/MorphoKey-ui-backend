@@ -43,5 +43,5 @@ Instrucciones oficiales: [https://docs.docker.com/engine/install/ubuntu/](https:
 ```
 usando la url [localhost://8080](localhost://8080)
 
-![Login](docs/images/captura_pgadmin_home_localhost.png)
-![Home](docs/images/captura_pgadmin_localhost.png)
+![Login](./docs/images/captura_pgadmin_home_localhost.png)
+![Home](./docs/images/captura_pgadmin_localhost.png)
