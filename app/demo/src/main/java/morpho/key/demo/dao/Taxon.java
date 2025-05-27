@@ -2,18 +2,24 @@ package morpho.key.demo.dao;
 
 import java.time.LocalDate;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.id.uuid.UuidGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.websocket.Decoder.Text;
 
+@Entity
+@Table(name = "domain")
 public class Taxon {
-    private String name;
-    private String nameScientific;
-    private Text description;
+    protected String name;
+    protected String nameScientific;
+    protected Text description;
     private final LocalDate creationDate;
-    private LocalDate updateDate;
+    protected LocalDate updateDate;
     private boolean status;
-    private Text photoUrl;
+    protected Text photoUrl;
 
     public Taxon(String name, String nameScientific, Text description, LocalDate creationDate) {
         this.name = name;
@@ -21,6 +27,16 @@ public class Taxon {
         this.description = description;
         this.creationDate = creationDate;
     }
+
+    
+
+    @Override
+    public String toString() {
+        return "Taxon [name=" + name + ", nameScientific=" + nameScientific + ", description=" + description
+                + ", creationDate=" + creationDate + ", updateDate=" + updateDate + ", status=" + status + ", photoUrl="
+                + photoUrl + "]";
+    }
+
 
 
     public String getName() {
