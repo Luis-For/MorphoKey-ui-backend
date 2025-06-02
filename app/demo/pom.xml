@@ -91,6 +91,13 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.7.3</version> <!-- usa la última versión estable -->
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>6.5.0</version>
+		</dependency>
 		
 
 

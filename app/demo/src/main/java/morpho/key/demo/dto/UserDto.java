@@ -3,16 +3,22 @@ package morpho.key.demo.dto;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "User")
+@Data
 public class UserDto {
+    @Id
     private UUID userID;
     private String name;
     private String last_name;
@@ -23,4 +29,5 @@ public class UserDto {
     private Boolean status;
     private LocalDate updated_account_date;
     private LocalDate last_login_date;
+    private String passwordHash;
 }

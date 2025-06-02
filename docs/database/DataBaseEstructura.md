@@ -40,4 +40,5 @@ La base de datos está dividida en varios dominios funcionales:
     * publication_type
     * userID
     cityID
+4. 
 ---
