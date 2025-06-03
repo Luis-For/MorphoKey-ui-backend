@@ -1,15 +1,15 @@
 package morpho.key.demo.controller;
 
 import lombok.RequiredArgsConstructor;
-import morpho.key.demo.dto.UserDto;
+import morpho.key.demo.entity.User;
 import morpho.key.demo.service.UserServiceImplementation;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.print.Pageable;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -19,13 +19,24 @@ public class UserController {
     private final UserServiceImplementation userServiceImplementation;
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody UserDto user, String password) {
-        return ResponseEntity.ok(userServiceImplementation.registrerUser(user, password));
+    public ResponseEntity<User> register(@RequestBody User user) {
+        return ResponseEntity.ok(userServiceImplementation.registrerUser(user));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<UserDto> search(@RequestParam("name") String username, Pageable pageable) {
-        Optional<UserDto> user= userServiceImplementation.findByUsername(username, pageable);
+    public ResponseEntity<User> search(@RequestParam("name") String name) {
+        Optional<User> user= userServiceImplementation.findByUsername(name);
         return user.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<User> login(@RequestParam("username") String username, @RequestParam("password") String password) {
+        //userServiceImplementation.loginUser()
+        return null;
+    }
+
+    @GetMapping("/test")
+    public String test() {
+        return "ResponseEntity.ok().build();";
     }
 }

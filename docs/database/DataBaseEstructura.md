@@ -14,19 +14,19 @@ La base de datos está dividida en varios dominios funcionales:
 ## Dominios funcionales y sus campos principales
 
 ### 1. Country
-- countryID (UUID, PK)
+- <span style="color:yellow;">countryID (UUID, PK)</style> 
 - name (VARCHAR(100), NOT NULL)
 - code (VARCHAR(10))
 - description (TEXT)
 
 ### 2. City
-- cityID (UUID, PK)
+- <span style="color:yellow;">cityID (UUID, PK)
 - name (VARCHAR(100), NOT NULL)
 - countryID (UUID, FK a Country.countryID, NOT NULL)
 - description (TEXT)
 
 ### 3. Domain
-- domainID (UUID, PK)
+- <span style="color:yellow;">domainID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - scientific_name (VARCHAR(50), NOT NULL)
 - description (TEXT)
@@ -36,7 +36,7 @@ La base de datos está dividida en varios dominios funcionales:
 - photo_url (TEXT)
 
 ### 4. Kingdom
-- kingdomID (UUID, PK)
+- <span style="color:yellow;">kingdomID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - scientific_name (VARCHAR(50), NOT NULL)
 - description (TEXT)
@@ -47,7 +47,7 @@ La base de datos está dividida en varios dominios funcionales:
 - domainID (UUID, FK a Domain.domainID, NOT NULL)
 
 ### 5. Phylum
-- phylumID (UUID, PK)
+- <span style="color:yellow;">phylumID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - scientific_name (VARCHAR(50), NOT NULL)
 - description (TEXT)
@@ -58,7 +58,7 @@ La base de datos está dividida en varios dominios funcionales:
 - kingdomID (UUID, FK a Kingdom.kingdomID, NOT NULL)
 
 ### 6. Class
-- classID (UUID, PK)
+- <span style="color:yellow;">classID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - scientific_name (VARCHAR(50), NOT NULL)
 - description (TEXT)
@@ -69,7 +69,7 @@ La base de datos está dividida en varios dominios funcionales:
 - phylumID (UUID, FK a Phylum.phylumID, NOT NULL)
 
 ### 7. Order
-- orderID (UUID, PK)
+- <span style="color:yellow;">orderID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - scientific_name (VARCHAR(50), NOT NULL)
 - description (TEXT)
@@ -80,7 +80,7 @@ La base de datos está dividida en varios dominios funcionales:
 - classID (UUID, FK a Class.classID, NOT NULL)
 
 ### 8. Family
-- familyID (UUID, PK)
+- <span style="color:yellow;">familyID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - scientific_name (VARCHAR(50), NOT NULL)
 - description (TEXT)
@@ -91,7 +91,7 @@ La base de datos está dividida en varios dominios funcionales:
 - orderID (UUID, FK a Order.orderID, NOT NULL)
 
 ### 9. Genus
-- genusID (UUID, PK)
+- <span style="color:yellow;">genusID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - scientific_name (VARCHAR(50), NOT NULL)
 - description (TEXT)
@@ -102,7 +102,7 @@ La base de datos está dividida en varios dominios funcionales:
 - familyID (UUID, FK a Family.familyID, NOT NULL)
 
 ### 10. Species
-- speciesID (UUID, PK)
+- <span style="color:yellow;">speciesID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - scientific_name (VARCHAR(50), NOT NULL)
 - description (TEXT)
@@ -114,7 +114,7 @@ La base de datos está dividida en varios dominios funcionales:
 - countryID (UUID, FK a Country.countryID, NOT NULL)
 
 ### 11. User
-- userID (UUID, PK)
+- <span style="color:yellow;">userID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - last_name (VARCHAR(50), NOT NULL)
 - email (VARCHAR(50), UNIQUE, NOT NULL)
@@ -130,17 +130,17 @@ La base de datos está dividida en varios dominios funcionales:
 - countryID (UUID, FK a Country.countryID)
 
 ### 12. Password (comentada)
-- passwordID (UUID, PK)
+- <span style="color:yellow;">passwordID (UUID, PK)
 - userID (UUID, FK a User.userID, NOT NULL)
 - password_hash (VARCHAR(255), NOT NULL)
 - last_updated (TIMESTAMP, NOT NULL)
 
 ### 13. Publication_Type
-- publicationTypeID (UUID, PK)
+- <span style="color:yellow;">publicationTypeID (UUID, PK)
 - type_name (VARCHAR(50), NOT NULL)
 
 ### 14. Publication
-- publicationID (UUID, PK)
+- <span style="color:yellow;">publicationID (UUID, PK)
 - title (VARCHAR(100))
 - body (TEXT, NOT NULL)
 - sources (VARCHAR(100))
@@ -152,7 +152,7 @@ La base de datos está dividida en varios dominios funcionales:
 - cityID (UUID, FK a City.cityID, NOT NULL)
 
 ### 15. Comment
-- commentID (UUID, PK)
+- <span style="color:yellow;">commentID (UUID, PK)
 - publicationID (UUID, FK a Publication.publicationID, NOT NULL)
 - userID (UUID, FK a User.userID, NOT NULL)
 - content (TEXT, NOT NULL)
@@ -161,40 +161,40 @@ La base de datos está dividida en varios dominios funcionales:
 - parentCommentID (UUID, FK a Comment.commentID)
 
 ### 16. Publication_Reference
-- referenceID (UUID, PK)
+- <span style="color:yellow;">referenceID (UUID, PK)
 - publicationID (UUID, FK a Publication.publicationID, NOT NULL)
 - referencedEntityID (UUID, NOT NULL)
 - entityType (VARCHAR(50), NOT NULL)
 - description (TEXT)
 
 ### 17. Publication_Photo
-- photoID (UUID, PK)
+- <span style="color:yellow;">photoID (UUID, PK)
 - publicationID (UUID, FK a Publication.publicationID, NOT NULL)
 - photo_url (TEXT, NOT NULL)
 - description (VARCHAR(255))
 - upload_date (DATE, NOT NULL)
 
 ### 18. Taxonomic_Question
-- questionID (UUID, PK)
+- <span style="color:yellow;">questionID (UUID, PK)
 - question_text (TEXT, NOT NULL)
 - creation_date (DATE, NOT NULL)
 - updated_date (DATE)
 - difficulty_level (VARCHAR(20))
 
 ### 19. Taxonomic_Option
-- optionID (UUID, PK)
+- <span style="color:yellow;">optionID (UUID, PK)
 - questionID (UUID, FK a Taxonomic_Question.questionID, NOT NULL)
 - nextQuestionID (UUID, FK a Taxonomic_Question.questionID)
 - speciesID (UUID, FK a Species.speciesID)
 - option_text (VARCHAR(255), NOT NULL)
 
 ### 20. Characteristic_Type
-- characteristicTypeID (UUID, PK)
+- <span style="color:yellow;">characteristicTypeID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - description (TEXT)
 
 ### 21. Characteristic
-- characteristicID (UUID, PK)
+- <span style="color:yellow;">characteristicID (UUID, PK)
 - name (VARCHAR(50), NOT NULL)
 - description (TEXT)
 - characteristicTypeID (UUID, FK a Characteristic_Type.characteristicTypeID, NOT NULL)
@@ -202,11 +202,12 @@ La base de datos está dividida en varios dominios funcionales:
 - updated_date (DATE)
 
 ### 22. Species_Characteristic
-- speciesCharacteristicID (UUID, PK)
+- <span style="color:yellow;">speciesCharacteristicID (UUID, PK)
 - speciesID (UUID, FK a Species.speciesID, NOT NULL)
 - characteristicID (UUID, FK a Characteristic.characteristicID, NOT NULL)
 - observation (TEXT)
 - association_date (DATE, NOT NULL)
 
 ---
----
+
+url para la conexión: 

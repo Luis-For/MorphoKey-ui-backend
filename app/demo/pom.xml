@@ -91,13 +91,19 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.7.3</version> <!-- usa la última versión estable -->
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
 			<version>6.5.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.session/spring-session-jdbc -->
+        <!--
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-jdbc</artifactId>
+			<version>3.5.0</version>
+		</dependency> -->
 		
 
 
@@ -135,10 +141,11 @@
 					</execution>
 				</executions>
 				<dependencies>
+					<!-- https://mvnrepository.com/artifact/org.springframework.restdocs/spring-restdocs-core -->
 					<dependency>
 						<groupId>org.springframework.restdocs</groupId>
-						<artifactId>spring-restdocs-asciidoctor</artifactId>
-						<version>${spring-restdocs.version}</version>
+						<artifactId>spring-restdocs-core</artifactId>
+						<version>3.0.3</version>
 					</dependency>
 				</dependencies>
 			</plugin>

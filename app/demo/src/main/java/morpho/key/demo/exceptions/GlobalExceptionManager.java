@@ -13,7 +13,7 @@ public class GlobalExceptionManager{
     @ExceptionHandler(value = {UserAlreadyExist.class})
     public ResponseEntity<Map<String, String>> handleUserAlreadyExists(UserAlreadyExist userAlreadyExistException){
         Map<String,String> error = new HashMap<>();
-        error.put("Error", "The user already exists");
+        error.put("Error", userAlreadyExistException.getMessage());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }
