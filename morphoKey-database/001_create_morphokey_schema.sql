@@ -1,241 +1,250 @@
--- Crear esquema para la base de datos Taxokey
-CREATE SCHEMA taxokey;
-
--- Tabla Country (debe ir antes de cualquier tabla que la referencie)
-CREATE TABLE taxokey.Country (
-    countryID UUID PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    code VARCHAR(10),
-    description TEXT
+--Taxon Tables
+CREATE TABLE Domain (
+  domainID SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT,
+  creation_date DATE NOT NULL,
+  updated_date DATE NOT NULL,
+  photo_url TEXT
 );
 
--- Tabla City (requiere Country)
-CREATE TABLE taxokey.City (
-    cityID UUID PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    countryID UUID NOT NULL REFERENCES taxokey.Country(countryID),
-    description TEXT
+CREATE TABLE Kingdom (
+  kingdomID SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT,
+  creation_date DATE NOT NULL,
+  updated_date DATE NOT NULL,
+  photo_url TEXT,
+  domainID INTEGER NOT NULL,
+  FOREIGN KEY (domainID) REFERENCES Domain(domainID) ON DELETE CASCADE
 );
 
--- Tabla Domain
-CREATE TABLE taxokey.Domain (
-    domainID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    scientific_name VARCHAR(50) NOT NULL,
-    description TEXT,
-    creation_date DATE NOT NULL,
-    updated_date DATE,
-    status BOOLEAN NOT NULL,
-    photo_url TEXT
+CREATE TABLE Phylum (
+  phylumID SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT,
+  creation_date DATE NOT NULL,
+  updated_date DATE NOT NULL,
+  photo_url TEXT,
+  kingdomID INTEGER NOT NULL,
+  FOREIGN KEY (kingdomID) REFERENCES Kingdom(kingdomID) ON DELETE CASCADE
 );
 
--- Tabla Kingdom (requiere Domain)
-CREATE TABLE taxokey.Kingdom (
-    kingdomID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    scientific_name VARCHAR(50) NOT NULL,
-    description TEXT,
-    creation_date DATE NOT NULL,
-    updated_date DATE,
-    status BOOLEAN NOT NULL,
-    photo_url TEXT,
-    domainID UUID NOT NULL REFERENCES taxokey.Domain(domainID)
+CREATE TABLE Class (
+  classID SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT,
+  creation_date DATE NOT NULL,
+  updated_date DATE NOT NULL,
+  photo_url TEXT,
+  phylumID INTEGER NOT NULL,
+  FOREIGN KEY (phylumID) REFERENCES Phylum(phylumID) ON DELETE CASCADE
 );
 
--- Tabla Phylum (requiere Kingdom)
-CREATE TABLE taxokey.Phylum (
-    phylumID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    scientific_name VARCHAR(50) NOT NULL,
-    description TEXT,
-    creation_date DATE NOT NULL,
-    updated_date DATE,
-    status BOOLEAN NOT NULL,
-    photo_url TEXT,
-    kingdomID UUID NOT NULL REFERENCES taxokey.Kingdom(kingdomID)
+CREATE TABLE "Order" (
+  orderID SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT,
+  creation_date DATE NOT NULL,
+  updated_date DATE NOT NULL,
+  photo_url TEXT,
+  classID INTEGER NOT NULL,
+  FOREIGN KEY (classID) REFERENCES Class(classID) ON DELETE CASCADE
 );
 
--- Tabla Class (requiere Phylum)
-CREATE TABLE taxokey.Class (
-    classID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    scientific_name VARCHAR(50) NOT NULL,
-    description TEXT,
-    creation_date DATE NOT NULL,
-    updated_date DATE,
-    status BOOLEAN NOT NULL,
-    photo_url TEXT,
-    phylumID UUID NOT NULL REFERENCES taxokey.Phylum(phylumID)
+CREATE TABLE Family (
+  familyID SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT,
+  creation_date DATE NOT NULL,
+  updated_date DATE NOT NULL,
+  photo_url TEXT,
+  orderID INTEGER NOT NULL,
+  FOREIGN KEY (orderID) REFERENCES "Order"(orderID) ON DELETE CASCADE
 );
 
--- Tabla Order (requiere Class)
-CREATE TABLE taxokey.Order (
-    orderID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    scientific_name VARCHAR(50) NOT NULL,
-    description TEXT,
-    creation_date DATE NOT NULL,
-    updated_date DATE,
-    status BOOLEAN NOT NULL,
-    photo_url TEXT,
-    classID UUID NOT NULL REFERENCES taxokey.Class(classID)
+CREATE TABLE Genus (
+  genusID SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT,
+  creation_date DATE NOT NULL,
+  updated_date DATE NOT NULL,
+  photo_url TEXT,
+  familyID INTEGER NOT NULL,
+  FOREIGN KEY (familyID) REFERENCES Family(familyID) ON DELETE CASCADE
 );
 
--- Tabla Family (requiere Order)
-CREATE TABLE taxokey.Family (
-    familyID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    scientific_name VARCHAR(50) NOT NULL,
-    description TEXT,
-    creation_date DATE NOT NULL,
-    updated_date DATE,
-    status BOOLEAN NOT NULL,
-    photo_url TEXT,
-    orderID UUID NOT NULL REFERENCES taxokey.Order(orderID)
+CREATE TABLE Country (
+  countryID SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  code INTEGER,
+  description TEXT
 );
 
--- Tabla Genus (requiere Family)
-CREATE TABLE taxokey.Genus (
-    genusID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    scientific_name VARCHAR(50) NOT NULL,
-    description TEXT,
-    creation_date DATE NOT NULL,
-    updated_date DATE,
-    status BOOLEAN NOT NULL,
-    photo_url TEXT,
-    familyID UUID NOT NULL REFERENCES taxokey.Family(familyID)
+CREATE TABLE Species (
+  speciesID SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  description TEXT,
+  creation_date DATE NOT NULL,
+  updated_date DATE NOT NULL,
+  photo_url TEXT,
+  genusID INTEGER NOT NULL,
+  countryID INTEGER NOT NULL,
+  FOREIGN KEY (genusID) REFERENCES Genus(genusID) ON DELETE CASCADE,
+  FOREIGN KEY (countryID) REFERENCES Country(countryID)
 );
 
--- Tabla Species (requiere Genus y Country)
-CREATE TABLE taxokey.Species (
-    speciesID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    scientific_name VARCHAR(50) NOT NULL,
-    description TEXT,
-    creation_date DATE NOT NULL,
-    updated_date DATE,
-    status BOOLEAN NOT NULL,
-    photo_url TEXT,
-    genusID UUID NOT NULL REFERENCES taxokey.Genus(genusID),
-    countryID UUID NOT NULL REFERENCES taxokey.Country(countryID)
+-- User Tables
+CREATE TABLE "User" (
+  userID UUID PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  user_name VARCHAR(50) UNIQUE NOT NULL,
+  email VARCHAR(50) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  creation_account_date DATE NOT NULL,
+  date_of_birth DATE NOT NULL,
+  role VARCHAR(20) NOT NULL,
+  status BOOLEAN NOT NULL DEFAULT TRUE,
+  verified BOOLEAN NOT NULL DEFAULT FALSE,
+  updated_account_date DATE,
+  last_login_date TIMESTAMP,
+  photo_profile TEXT
 );
 
--- Tabla User (requiere Country)
-CREATE TABLE taxokey.User (
-    userID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    email VARCHAR(50) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    creation_account_date DATE NOT NULL,
-    date_of_birth DATE,
-    role VARCHAR(20),
-    status BOOLEAN NOT NULL,
-    phone VARCHAR(15),
-    profile_photo_url TEXT,
-    updated_account_date DATE,
-    last_login_date TIMESTAMP,
-    countryID UUID REFERENCES taxokey.Country(countryID)
+--Publication and content table
+CREATE TABLE City (
+  cityID SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  countryID INTEGER,
+  description TEXT,
+  FOREIGN KEY (countryID) REFERENCES Country(countryID)
 );
 
--- Tabla Password (requiere User)
-/*CREATE TABLE taxokey.Password (
-    passwordID UUID PRIMARY KEY,
-    userID UUID NOT NULL REFERENCES taxokey.User(userID),
-    password_hash VARCHAR(255) NOT NULL,
-    last_updated TIMESTAMP NOT NULL
-);*/
-
--- Tabla Publication_Type
-CREATE TABLE taxokey.Publication_Type (
-    publicationTypeID UUID PRIMARY KEY,
-    type_name VARCHAR(50) NOT NULL
+CREATE TABLE Publication (
+  publicationID SERIAL PRIMARY KEY,
+  title VARCHAR(100) NOT NULL,
+  body TEXT NOT NULL,
+  sources TEXT,
+  creation_date DATE NOT NULL,
+  updated_date DATE,
+  status BOOLEAN,
+  publication_type VARCHAR(50),
+  userID UUID NOT NULL,
+  cityID INTEGER NOT NULL,
+  FOREIGN KEY (userID) REFERENCES "User"(userID) ON DELETE CASCADE,
+  FOREIGN KEY (cityID) REFERENCES City(cityID)
 );
 
--- Tabla Publication (requiere User, City y Publication_Type)
-CREATE TABLE taxokey.Publication (
-    publicationID UUID PRIMARY KEY,
-    title VARCHAR(100),
-    body TEXT NOT NULL,
-    sources VARCHAR(100),
-    creation_date DATE NOT NULL,
-    updated_date DATE,
-    status BOOLEAN NOT NULL,
-    publicationTypeID UUID NOT NULL REFERENCES taxokey.Publication_Type(publicationTypeID),
-    userID UUID NOT NULL REFERENCES taxokey.User(userID),
-    cityID UUID NOT NULL REFERENCES taxokey.City(cityID)
+CREATE TABLE Comment (
+  commentID SERIAL PRIMARY KEY,
+  publicationID INTEGER,
+  userID UUID,
+  content TEXT,
+  comment_date TIMESTAMP,
+  status BOOLEAN,
+  parentCommentID INTEGER,
+  FOREIGN KEY (publicationID) REFERENCES Publication(publicationID) ON DELETE CASCADE,
+  FOREIGN KEY (userID) REFERENCES "User"(userID),
+  FOREIGN KEY (parentCommentID) REFERENCES Comment(commentID) ON DELETE CASCADE
 );
 
--- Tabla Comment (requiere Publication y User)
-CREATE TABLE taxokey.Comment (
-    commentID UUID PRIMARY KEY,
-    publicationID UUID NOT NULL REFERENCES taxokey.Publication(publicationID),
-    userID UUID NOT NULL REFERENCES taxokey.User(userID),
-    content TEXT NOT NULL,
-    comment_date TIMESTAMP NOT NULL,
-    status BOOLEAN NOT NULL,
-    parentCommentID UUID REFERENCES taxokey.Comment(commentID)
+CREATE TABLE Score (
+  publicationID INTEGER,
+  userID UUID,
+  score INTEGER,
+  description TEXT,
+  PRIMARY KEY (publicationID, userID),
+  FOREIGN KEY (publicationID) REFERENCES Publication(publicationID) ON DELETE CASCADE,
+  FOREIGN KEY (userID) REFERENCES "User"(userID) ON DELETE CASCADE
 );
 
--- Tabla Publication_Reference (requiere Publication)
-CREATE TABLE taxokey.Publication_Reference (
-    referenceID UUID PRIMARY KEY,
-    publicationID UUID NOT NULL REFERENCES taxokey.Publication(publicationID),
-    referencedEntityID UUID NOT NULL,
-    entityType VARCHAR(50) NOT NULL,
-    description TEXT
+CREATE TABLE Entity_Type (
+  entityTypeID SERIAL PRIMARY KEY,
+  name VARCHAR(50)
 );
 
--- Tabla Publication_Photo (requiere Publication)
-CREATE TABLE taxokey.Publication_Photo (
-    photoID UUID PRIMARY KEY,
-    publicationID UUID NOT NULL REFERENCES taxokey.Publication(publicationID),
-    photo_url TEXT NOT NULL,
-    description VARCHAR(255),
-    upload_date DATE NOT NULL
+CREATE TABLE Publication_Reference (
+  referenceID SERIAL PRIMARY KEY,
+  publicationID INTEGER,
+  referencedEntityID INTEGER,
+  entityTypeID INTEGER,
+  description TEXT,
+  FOREIGN KEY (publicationID) REFERENCES Publication(publicationID) ON DELETE CASCADE,
+  FOREIGN KEY (entityTypeID) REFERENCES Entity_Type(entityTypeID)
 );
 
--- Tabla Taxonomic_Question
-CREATE TABLE taxokey.Taxonomic_Question (
-    questionID UUID PRIMARY KEY,
-    question_text TEXT NOT NULL,
-    creation_date DATE NOT NULL,
-    updated_date DATE,
-    difficulty_level VARCHAR(20)
+CREATE TABLE Publication_Photo (
+  photoID TEXT PRIMARY KEY,
+  publicationID INTEGER,
+  photo_url TEXT,
+  description VARCHAR(255),
+  upload_date DATE,
+  FOREIGN KEY (publicationID) REFERENCES Publication(publicationID) ON DELETE CASCADE
 );
 
--- Tabla Taxonomic_Option (requiere Taxonomic_Question y Species)
-CREATE TABLE taxokey.Taxonomic_Option (
-    optionID UUID PRIMARY KEY,
-    questionID UUID NOT NULL REFERENCES taxokey.Taxonomic_Question(questionID),
-    nextQuestionID UUID REFERENCES taxokey.Taxonomic_Question(questionID),
-    speciesID UUID REFERENCES taxokey.Species(speciesID),
-    option_text VARCHAR(255) NOT NULL
+--Taxon Question
+CREATE TABLE Taxonomic_Question (
+  questionID UUID PRIMARY KEY,
+  question_text TEXT,
+  creation_date DATE,
+  updated_date DATE,
+  difficulty_level VARCHAR(20)
 );
 
--- Tabla Characteristic_Type
-CREATE TABLE taxokey.Characteristic_Type (
-    characteristicTypeID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    description TEXT
+CREATE TABLE Taxonomic_Option (
+  optionID UUID PRIMARY KEY,
+  questionID UUID,
+  nextQuestionID UUID,
+  speciesID INTEGER,
+  option_text VARCHAR(255),
+  FOREIGN KEY (questionID) REFERENCES Taxonomic_Question(questionID) ON DELETE CASCADE,
+  FOREIGN KEY (nextQuestionID) REFERENCES Taxonomic_Question(questionID),
+  FOREIGN KEY (speciesID) REFERENCES Species(speciesID)
 );
 
--- Tabla Characteristic (requiere Characteristic_Type)
-CREATE TABLE taxokey.Characteristic (
-    characteristicID UUID PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    description TEXT,
-    characteristicTypeID UUID NOT NULL REFERENCES taxokey.Characteristic_Type(characteristicTypeID),
-    creation_date DATE NOT NULL,
-    updated_date DATE
+CREATE TABLE Option_Species (
+  optionSpeciesID UUID PRIMARY KEY,
+  optionID UUID,
+  speciesID INTEGER,
+  FOREIGN KEY (optionID) REFERENCES Taxonomic_Option(optionID) ON DELETE CASCADE,
+  FOREIGN KEY (speciesID) REFERENCES Species(speciesID)
 );
 
--- Tabla Species_Characteristic (requiere Species y Characteristic)
-CREATE TABLE taxokey.Species_Characteristic (
-    speciesCharacteristicID UUID PRIMARY KEY,
-    speciesID UUID NOT NULL REFERENCES taxokey.Species(speciesID),
-    characteristicID UUID NOT NULL REFERENCES taxokey.Characteristic(characteristicID),
-    observation TEXT,
-    association_date DATE NOT NULL
+-- Characteristics
+CREATE TABLE Characteristic_Type (
+  characteristicTypeID TEXT PRIMARY KEY,
+  name VARCHAR(50),
+  description TEXT
+);
+
+CREATE TABLE Characteristic (
+  characteristicID SERIAL PRIMARY KEY,
+  name VARCHAR(50),
+  description TEXT,
+  characteristicTypeID TEXT,
+  creation_date DATE,
+  updated_date DATE,
+  FOREIGN KEY (characteristicTypeID) REFERENCES Characteristic_Type(characteristicTypeID)
+);
+
+CREATE TABLE Species_Characteristic (
+  speciesCharacteristicID TEXT PRIMARY KEY,
+  speciesID INTEGER,
+  characteristicID INTEGER,
+  observation TEXT,
+  association_date DATE,
+  FOREIGN KEY (speciesID) REFERENCES Species(speciesID) ON DELETE CASCADE,
+  FOREIGN KEY (characteristicID) REFERENCES Characteristic(characteristicID)
+);
+
+--tokens
+CREATE TABLE Refresh_tokens (
+  tokenID UUID PRIMARY KEY,
+  userID UUID,
+  toker_hash TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  revoked BOOLEAN DEFAULT FALSE,
+  FOREIGN KEY (userID) REFERENCES "User"(userID) ON DELETE CASCADE
 );
