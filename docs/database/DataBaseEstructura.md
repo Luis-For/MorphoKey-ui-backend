@@ -210,4 +210,8 @@ La base de datos está dividida en varios dominios funcionales:
 
 ---
 
-url para la conexión: 
+url para la conexión:
+jdbc:postgresql://localhost:5432/morphokeydb\
+user: admin\
+password: admin 123\
+

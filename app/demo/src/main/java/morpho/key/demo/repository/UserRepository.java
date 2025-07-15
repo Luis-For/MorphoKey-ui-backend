@@ -15,5 +15,7 @@ import morpho.key.demo.entity.User;
 @EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User, UUID>{
     Optional<User> findByName(String name);
-    boolean existsUserByName(String name);
+    boolean existsByUserName(String username);
+    boolean existsByEmail(String email);
+    boolean existsUserByEmail(String email);
 }

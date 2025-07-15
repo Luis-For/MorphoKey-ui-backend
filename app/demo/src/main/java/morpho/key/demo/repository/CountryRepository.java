@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CountryRepository extends JpaRepository<Country, UUID> {
-    boolean existsCountryByCountryCode(String countryCode);
-    //Country saveCountryIfNotExists(Country country);
+    boolean existsCountriesBycountryName(String countryName);
     boolean existsByCountryCode(String countryCode);
-    Country findCountryByCountryCode(String countryCode);
 
     @Query("SELECT c FROM Country c WHERE c.countryCode = :code")
     Country getByCountryCode(@Param("code") String code);
+
+    Optional<Country> findByCountryCode(String code);
 
 }

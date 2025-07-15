@@ -14,38 +14,40 @@ import org.hibernate.annotations.GenericGenerator;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "User", schema = "taxokey")
-@Data
+@Table(name = "\"user\"")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "userID", updatable = false, nullable = false)
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "userid", nullable = false)
     private UUID userID;
-    @Column(name = "name",  nullable = false, length = 50)
+    @Column(name = "name",  nullable = false, length = 80)
     private String name;
-    @Column(name = "last_name",  nullable = false, length = 50)
-    private String last_name;
+    @Column(name = "last_name",  nullable = false, length = 80)
+    private String lastName;
+    @Column(name = "user_name", nullable = false, unique = true, length = 80)
+    private String userName;
     @Column(name = "email", nullable = false, unique = true, length = 80)
     private String email;
     @Column(name = "password_hash",  nullable = false)
-    private String passwordHash;
+    private String password;
     @Column(name = "creation_account_date",  nullable = false)
-    private LocalDate creation_account_date;
+    private LocalDate creationAccountDate;
     @Column(name = "date_of_birth",  nullable = false)
-    private LocalDate date_of_birth;
+    private LocalDate dateOfBirth;
     @Column(name = "role",  nullable = false)
     private String role;
     @Column(name = "status",  nullable = false)
     private Boolean status;
-    @Column(name = "phone")
-    private String phone;
-    @Column(name = "profile_photo_url")
-    private String profile_photo_url;
+    @Column(name = "verified",  nullable = false)
+    private Boolean verifiedStatus;
     @Column(name = "updated_account_date",  nullable = false)
-    private LocalDate updated_account_date;
+    private LocalDate updatedAccountDate;
     @Column(name = "last_login_date",  nullable = false)
-    private LocalDateTime last_login_date;
+    private LocalDateTime lastLoginDate;
+    @Column(name = "profile_photo_url")
+    private String profilePhotoUrl;
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "cityID")
+    @JoinColumn(name = "cityid")
     private City city;
 }

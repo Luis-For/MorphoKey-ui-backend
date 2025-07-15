@@ -1,15 +1,17 @@
 package morpho.key.demo.controller;
 
 import lombok.RequiredArgsConstructor;
+import morpho.key.demo.dto.user.UserDto;
 import morpho.key.demo.entity.User;
+import morpho.key.demo.service.EmailService;
 import morpho.key.demo.service.UserServiceImplementation;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -17,9 +19,11 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private final UserServiceImplementation userServiceImplementation;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
+    public ResponseEntity<User> register(@RequestBody UserDto user) {
         return ResponseEntity.ok(userServiceImplementation.registrerUser(user));
     }
 
@@ -35,8 +39,17 @@ public class UserController {
         return null;
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "ResponseEntity.ok().build();";
+    @PostMapping("/send")
+    public ResponseEntity<String> send(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String token = UUID.randomUUID().toString();
+        emailService.sendRecoveryEmail(email, token);
+        return ResponseEntity.ok("correo enviado"+email);
     }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("¡Hola desde el backend!");
+    }
+
 }

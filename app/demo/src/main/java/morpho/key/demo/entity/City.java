@@ -1,5 +1,6 @@
 package morpho.key.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -7,26 +8,22 @@ import org.hibernate.annotations.GenericGenerator;
 import java.util.UUID;
 
 @Entity
-@Table(name = "city", schema = "taxokey")
-@Data
+@Table(name = "city")
 @AllArgsConstructor
 @NoArgsConstructor
-//@RequiredArgsConstructor
+@Getter
+@Setter
 @Builder
+@ToString
 public class City {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(name = "cityID", updatable = false, nullable = false)
-    private UUID cityID;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "cityid", updatable = false, nullable = false)
+    private Integer cityID;
     @Column(name = "name")
     private String nameCity;
-    @Column(name = "code_city")
-    private String codeCity;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "countryID")
+    @JoinColumn(name = "countryid")
+    @JsonBackReference
     private Country country;
 }

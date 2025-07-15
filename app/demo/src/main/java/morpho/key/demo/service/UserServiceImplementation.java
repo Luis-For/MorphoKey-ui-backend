@@ -1,6 +1,9 @@
 package morpho.key.demo.service;
 
 import lombok.RequiredArgsConstructor;
+import morpho.key.demo.dto.user.CityDto;
+import morpho.key.demo.dto.user.CountryDto;
+import morpho.key.demo.dto.user.UserDto;
 import morpho.key.demo.entity.City;
 import morpho.key.demo.entity.Country;
 import morpho.key.demo.entity.User;
@@ -12,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,42 +34,67 @@ public class UserServiceImplementation implements UserService{
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User registrerUser(User user) {
-        if(userRepository.existsUserByName(user.getName())){
-            throw new UserAlreadyExist("Username already exists");
+    public User registrerUser(UserDto user) {
+        // Validar si ya existe usuario con mismo email o username
+        if (userRepository.existsByEmail(user.getEmail()) || userRepository.existsByUserName(user.getUserName())) {
+            throw new UserAlreadyExist("Email or Username already exists");
         }
-        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
-        user.setUserID(UUID.randomUUID());
-        City city=user.getCity();
-        Country country=city.getCountry();
 
-        if(country.getCountryID()==null && !countryRepository.existsByCountryCode(country.getCountryCode())){
-            country.setCountryID(UUID.randomUUID());
-            country=countryRepository.save(country);
-            city.setCountry(country);
+        // Crear entidad User con datos básicos
+        User userEntity = User.builder()
+                .name(user.getName())
+                .lastName(user.getLastName())
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .password(passwordEncoder.encode(user.getPassword()))
+                .creationAccountDate(LocalDate.now())
+                .updatedAccountDate(LocalDate.now())
+                .lastLoginDate(LocalDateTime.now())
+                .dateOfBirth(user.getDateOfBirth())
+                .role(user.getRole())
+                .status(true)
+                .verifiedStatus(false)
+                .build();
+
+        // Buscar o crear país
+        Optional<Country> countryOptional=countryRepository.findByCountryCode(user.getCity().getCountry().getCountryCode());
+        Country country;
+        if(countryOptional.isPresent()){
+            country=countryOptional.get();
         }else{
-            country=countryRepository.findCountryByCountryCode(country.getCountryCode());
-            city.setCountry(country);
+            country=Country.builder()
+                    .countryName(user.getCity().getCountry().getName())
+                    .countryCode(user.getCity().getCountry().getCountryCode())
+                    .build();
+            countryRepository.save(country);
         }
 
-        if(city.getCityID()==null && !cityRepository.existsByCodeCity(city.getCodeCity())){
-            city.setCityID(UUID.randomUUID());
-            city=cityRepository.save(city);
+        // Buscar o crear ciudad
+        Optional<City> cityOptional = cityRepository.findCityByNameCity(user.getCity().getName());
+        City city;
+        if (cityOptional.isPresent()) {
+            city=cityOptional.get();
         }else{
-            city=cityRepository.findCityByCodeCity(city.getCodeCity());
+            city = City.builder()
+                    .nameCity(user.getCity().getName())
+                    .country(country)
+                    .build();
+            city = cityRepository.save(city);
         }
 
-        user.setCity(city);
-        return userRepository.save(user);
+        // Asignar ciudad persistida al usuario
+        userEntity.setCity(city);
+        return userRepository.save(userEntity);
     }
 
+
     @Override
-    public User loginUser(User user) {
-        User userFound=findByEmailAndPassword(user.getEmail(), user.getPasswordHash());
+    public User loginUser(UserDto user) {
+        /*User userFound=findByEmailAndPassword(user.getEmail(), user.getPasswordHash()).get();
         if(userFound==null){
             throw new UserAlreadyExist("Username no already exists");
         }
-        passwordEncoder.matches(user.getPasswordHash(), userFound.getPasswordHash());
+        passwordEncoder.matches(user.getPasswordHash(), userFound.getPasswordHash());*/
         return null;
     }
 
@@ -75,38 +104,10 @@ public class UserServiceImplementation implements UserService{
     }
 
     @Override
-    public User findByEmail(String email) {
-        return null;
-    }
+    public Optional<User> findByEmailAndPassword(String email, String password) {
+        if(userRepository.existsUserByEmail(email)){
 
-    @Override
-    public User findByUsernameAndPassword(String username, String password) {
-        return null;
-    }
-
-    @Override
-    public User findByEmailAndPassword(String email, String password) {
-        return null;
-    }
-
-    @Override
-    public Optional<List<User>> findAllUsersByName(String name) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<List<User>> findAllUsersByEmail(String email) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<List<User>> findAllUsersByUsername(String username) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Boolean passwordMatches(User user, String password) {
-        findAllUsersByEmail(user.getEmail());
+        }
         return null;
     }
 }
