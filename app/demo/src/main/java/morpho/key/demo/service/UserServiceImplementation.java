@@ -1,8 +1,6 @@
 package morpho.key.demo.service;
 
 import lombok.RequiredArgsConstructor;
-import morpho.key.demo.dto.user.CityDto;
-import morpho.key.demo.dto.user.CountryDto;
 import morpho.key.demo.dto.user.UserDto;
 import morpho.key.demo.entity.City;
 import morpho.key.demo.entity.Country;
@@ -17,21 +15,23 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImplementation implements UserService{
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private CityRepository cityRepository;
-    @Autowired
     private CountryRepository countryRepository;
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserServiceImplementation(UserRepository userRepository, CityRepository cityRepository, CountryRepository countryRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.cityRepository = cityRepository;
+        this.countryRepository = countryRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public User registrerUser(UserDto user) {
