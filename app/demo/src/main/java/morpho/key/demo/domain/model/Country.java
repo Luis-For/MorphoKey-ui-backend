@@ -1,6 +1,7 @@
 package morpho.key.demo.domain.model;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Modelo de Country (País).
@@ -19,11 +20,12 @@ import lombok.Data;
  * Auth: Luis Fornaris
  * Date:08-01-2025
  */
-@Data
+@Getter
+@AllArgsConstructor
 public class Country {
     /**
      * El identificador no sera puesto de forma automatica, se utilizara para separarlo del codigo del pais ISO 3166-1 alpha-2
      */
-    private Integer countryId;
-    private String name;
+    private final Integer countryId;
+    private final String name;
 }

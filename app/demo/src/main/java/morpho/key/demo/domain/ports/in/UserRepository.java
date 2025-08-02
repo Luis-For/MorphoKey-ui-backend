@@ -33,18 +33,16 @@ public interface UserRepository {
     /**
      * Registra un nuevo usuario en el sistema.
      *
-     * @param username Nombre de usuario único
-     * @param email Correo electrónico válido del usuario
-     * @param cityId Identificador de la ciudad a la que pertenece el usuario
+     * @param user userModel
      * @return El usuario registrado, incluyendo su ID generado
      * @throws IllegalArgumentException Si el email es inválido
      * @throws IllegalStateException Si el usuario ya existe
      */
     User saveUser(User user);
-    //Buscar usuario por el id y lo retorna si lo encuentra
+    ///Buscar usuario por el id y lo retorna si lo encuentra
     Optional<User> findUserById(Long id);
-    //Actualizar usuario
+    ///Actualizar usuario
     User updateUser(User user);
-    //Devuelve cierto si el usuario ha sido eliminado correctamente
+    ///Devuelve cierto si el usuario ha sido eliminado correctamente
     boolean deleteUser(User user);
 }

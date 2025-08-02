@@ -1,11 +1,13 @@
 package morpho.key.demo.dto.user;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
-@NoArgsConstructor
+/**
+ * Model
+ */
+
+@Getter
 @AllArgsConstructor
 public class CityDto {
     private Integer id;

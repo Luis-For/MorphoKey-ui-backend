@@ -1,7 +1,7 @@
 package morpho.key.demo.domain.model;
 
-import lombok.Data;
-import morpho.key.demo.dto.user.CountryDto;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 /**
  * Modelo de City (Ciudad).
  *
@@ -17,15 +17,16 @@ import morpho.key.demo.dto.user.CountryDto;
  * - name: Nombre de la ciudad
  * - country: Referencia al país al que pertenece
  */
-@Data
+@Getter
+@AllArgsConstructor
 public class City {
     /***
      * Idendificador de cada ciudad autoincremental
      */
-    private Integer cityId;
-    private String name;
+    private final Integer cityId;
+    private final String name;
     /**
      * model pais
      */
-    private CountryDto country;
+    private final Country country;
 }
