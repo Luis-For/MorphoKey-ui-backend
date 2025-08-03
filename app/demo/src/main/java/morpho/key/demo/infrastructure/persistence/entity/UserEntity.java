@@ -2,6 +2,7 @@ package morpho.key.demo.infrastructure.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import morpho.key.demo.domain.model.User;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * Entidad JPA que representa a un usuario en la base de datos PostgreSQL.
+ * Entidad JPA que representa a un usuario en la base de datos PostgresSQL.
  *
  * <p>
  * Esta clase está ubicada en la capa de infraestructura y es utilizada por
@@ -18,7 +19,7 @@ import java.util.UUID;
  *
  * <h3>Detalles:</h3>
  * <ul>
- *   <li>Se corresponde con la tabla <b>users</b> en PostgreSQL.</li>
+ *   <li>Se corresponde con la tabla <b>users</b> en PostgresSQL.</li>
  *   <li>Incluye relaciones con la entidad {@link CityEntity} mediante @ManyToOne.</li>
  *   <li>Debe permanecer libre de lógica de negocio; su propósito es únicamente persistencia.</li>
  * </ul>
