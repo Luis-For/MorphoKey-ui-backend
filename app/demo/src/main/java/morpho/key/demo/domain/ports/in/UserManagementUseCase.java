@@ -2,8 +2,6 @@ package morpho.key.demo.domain.ports.in;
 
 import morpho.key.demo.domain.model.User;
 
-import java.util.Optional;
-
 /**
  * Puerto de entrada (Inbound Port) para la gestión de usuarios.
  *
@@ -29,7 +27,7 @@ import java.util.Optional;
  * Date: 01-08-2025
  */
 
-public interface UserRepository {
+public interface UserManagementUseCase {
     /**
      * Registra un nuevo usuario en el sistema.
      *
@@ -38,11 +36,11 @@ public interface UserRepository {
      * @throws IllegalArgumentException Si el email es inválido
      * @throws IllegalStateException Si el usuario ya existe
      */
-    User saveUser(User user);
+    User createUser(User user);
     ///Buscar usuario por el id y lo retorna si lo encuentra
-    Optional<User> findUserById(Long id);
+    //Optional<User> findUserById(Long id);
     ///Actualizar usuario
-    User updateUser(User user);
+    //User updateUser(User user);
     ///Devuelve cierto si el usuario ha sido eliminado correctamente
-    boolean deleteUser(User user);
+    //boolean deleteUser(User user);
 }

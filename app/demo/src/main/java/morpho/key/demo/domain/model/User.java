@@ -1,8 +1,12 @@
 package morpho.key.demo.domain.model;
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,12 +38,25 @@ public class User {
      */
     //identificador universal para usuario
     private final UUID userID;
+    @NotNull
+    @Size(min = 1, max = 50)
     private String name;
+    @NotNull
+    @Size(min = 1, max = 50)
     private String lastName;
+    @NotNull
+    @Size(min = 1, max = 50)
     private String userName;
+    @NotNull
+    @Email
     private String email;
+    @NotNull
     private String password;
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private final LocalDate creationAccountDate;
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDate dateOfBirth;
     private String role;
     private Boolean status;
